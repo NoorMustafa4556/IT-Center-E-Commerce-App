@@ -1,0 +1,55 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block content %}
+<div class="box-element">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div>
+            <h3>Product Inventory</h3>
+            <a href="{% url 'admin_dashboard' %}" class="btn-outline"
+                style="text-decoration:none; display:inline-block; margin-top:5px; font-size:0.9rem;">&larr; Back to
+                Dashboard</a>
+        </div>
+        <a href="{% url 'add_product' %}" class="btn-primary" style="width: auto; padding: 0.5rem 1rem;">+ Add New
+            Product</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}"
+                        style="height: 40px; width: 40px; object-fit: cover; border-radius: 4px;">
+                    {% else %}
+                    No Img
+                    {% endif %}
+                </td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category.name }}</td>
+                <td>Rs. {{ product.price|floatformat:0 }}</td>
+                <td>
+                    <a href="{% url 'edit_product' product.id %}"
+                        style="color: var(--accent-color); margin-right: 10px;"><i class='bx bxs-edit'></i></a>
+                    <a href="{% url 'delete_product' product.id %}" style="color: #cf6679;"><i
+                            class='bx bxs-trash'></i></a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No products found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

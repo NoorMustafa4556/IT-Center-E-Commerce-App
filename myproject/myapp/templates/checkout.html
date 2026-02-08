@@ -1,0 +1,214 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container" style="margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
+
+    <!-- Order Summary -->
+    <div>
+        <h3 style="margin-bottom: 1.5rem; color: var(--text-main);">Order Summary</h3>
+        <div style="border: 1px solid var(--glass-border); border-radius: 8px; overflow: hidden;">
+            <div class="checkout-header">
+                <h3>Order Summary</h3>
+            </div>
+
+            <div class="order-summary-content">
+                {% for item in items %}
+                <div class="cart-row checkout-row" data-product="{{item.product.id}}"
+                    data-price="{{item.product.price}}">
+                    <div style="flex: 0 0 30px;">
+                        <input type="checkbox" class="checkout-select" checked data-id="{{item.product.id}}"
+                            data-price="{{item.get_total}}">
+                    </div>
+                    <div style="flex: 2; display: flex; align-items: center;">
+                        <img class="row-image" src="{{item.product.image.url}}" alt="{{item.product.name}}"
+                            style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; margin-right: 10px;">
+                        <span class="row-text">{{item.product.name}}</span>
+                    </div>
+                    <div style="flex: 1; text-align: center;">
+                        <span class="row-text">x{{item.quantity}}</span>
+                    </div>
+                    <div style="flex: 1; text-align: right;">
+                        <span class="row-total">Rs. {{item.get_total|floatformat:0}}</span>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="checkout-total">
+                    <h3>Total: Rs. <span id="checkout-total">{{order.get_cart_total|floatformat:0}}</span></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shipping Info -->
+    <div class="col-lg-6">
+        <h3 style="margin-bottom: 1.5rem; color: var(--text-main);">Shipping Information</h3>
+        <div class="box-element" id="form-wrapper" style="background: var(--card-bg);">
+            <div class="checkout-header">
+                <h3>Shipping Information</h3>
+            </div>
+
+            <form id="form">
+                <div id="user-info">
+                    <div class="form-field">
+                        <input required class="form-control" type="text" name="name" placeholder="Name..">
+                    </div>
+                    <div class="form-field">
+                        <input required class="form-control" type="email" name="email" placeholder="Email..">
+                    </div>
+                </div>
+
+                <div id="shipping-info">
+                    <h4 style="color: var(--text-muted); margin-bottom: 20px;">Shipping Details:</h4>
+                    <div class="form-field">
+                        <input class="form-control" type="text" name="address" placeholder="Address..">
+                    </div>
+                    <div class="form-field">
+                        <input class="form-control" type="text" name="city" placeholder="City..">
+                    </div>
+                    <div class="form-field">
+                        <input class="form-control" type="text" name="state" placeholder="State/Province..">
+                    </div>
+                    <div class="form-field">
+                        <input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
+                    </div>
+                </div>
+
+                <hr style="border-color: var(--glass-border);">
+                <input id="form-button" class="btn-checkout btn-block" type="submit" value="CONTINUE">
+            </form>
+        </div>
+
+        <div class="box-element hidden" id="payment-info" style="background: var(--card-bg); margin-top: 20px;">
+            <small style="color: var(--text-muted);">Payment Method: Cash on Delivery</small>
+            <button id="make-payment" class="btn-checkout btn-block">PLACE ORDER (COD)</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var shipping = '{{order.shipping}}'
+    var initialTotal = parseFloat('{{order.get_cart_total}}');
+
+    // Handle Checkbox Changes
+    const checkboxes = document.querySelectorAll('.checkout-select');
+    const totalDisplay = document.getElementById('checkout-total');
+
+    function updateTotal() {
+        let currentTotal = 0;
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                currentTotal += parseFloat(cb.dataset.price);
+            }
+        });
+        totalDisplay.innerText = currentTotal.toFixed(0);
+    }
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', updateTotal);
+    });
+
+    // Pre-select based on previous logical flow if any (optional, but let's default to verified logic)
+    // If passed from cart via session, we can filter here, OR just let user select again.
+    // User asked "Checkboxes kahan hain", so giving them control here is best.
+    // Let's check session storage just in case to respect previous step
+    var preSelected = JSON.parse(sessionStorage.getItem('selectedProducts'));
+    if (preSelected && preSelected.length > 0) {
+        checkboxes.forEach(cb => {
+            if (!preSelected.includes(cb.dataset.id)) {
+                cb.checked = false;
+            }
+        });
+        updateTotal();
+    }
+
+
+    if (user != 'AnonymousUser') {
+        document.getElementById('user-info').innerHTML = ''
+    }
+
+    if (shipping == 'False' && user != 'AnonymousUser') {
+        // Hide entire form if user is logged in and shipping is false
+        document.getElementById('form-wrapper').classList.add("hidden");
+        document.getElementById('payment-info').classList.remove("hidden");
+    }
+
+    var form = document.getElementById('form')
+    form.addEventListener('submit', function (e) {
+        e.preventDefault()
+        console.log('Form Submitted...')
+        document.getElementById('form-button').classList.add("hidden");
+        document.getElementById('payment-info').classList.remove("hidden");
+    })
+
+    document.getElementById('make-payment').addEventListener('click', function (e) {
+        submitFormData()
+    })
+
+    function submitFormData() {
+        console.log('Payment button clicked')
+
+        // Get currently selected IDs
+        var selectedIds = [];
+        var currentTotal = 0;
+        document.querySelectorAll('.checkout-select:checked').forEach(cb => {
+            selectedIds.push(cb.dataset.id);
+            currentTotal += parseFloat(cb.dataset.price);
+        });
+
+        if (selectedIds.length === 0) {
+            alert("Please select at least one item to purchase.");
+            return;
+        }
+
+        var userFormData = {
+            'name': null,
+            'email': null,
+            'total': currentTotal,
+        }
+
+        var shippingInfo = {
+            'address': null,
+            'city': null,
+            'state': null,
+            'zipcode': null,
+        }
+
+        if (shipping != 'False') {
+            shippingInfo.address = form.address.value
+            shippingInfo.city = form.city.value
+            shippingInfo.state = form.state.value
+            shippingInfo.zipcode = form.zipcode.value
+        }
+
+        if (user == 'AnonymousUser') {
+            userFormData.name = form.name.value
+            userFormData.email = form.email.value
+        }
+
+        var payload = {
+            'form': userFormData,
+            'shipping': shippingInfo,
+            'selected_product_ids': selectedIds
+        };
+
+        var url = "/process_order/"
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify(payload),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success:', data);
+                sessionStorage.removeItem('selectedProducts');
+                alert('Order completed!');
+                window.location.href = "{% url 'home' %}"
+            })
+    }
+</script>
+{% endblock content %}

@@ -1,0 +1,1 @@
+IT-Center-E-Commerce-App: A robust Django e-commerce platform for premium tech. Features a dynamic storefront, smart categorization, seamless cart, and secure auth. Includes a powerful custom admin panel for managing products, orders, and customers efficiently.

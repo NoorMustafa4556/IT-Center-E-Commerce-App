@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Center | Premium Tech Store</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <!-- Icons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+    <script type="text/javascript">
+        var user = '{{request.user}}'
+
+        function getToken(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getToken('csrftoken');
+    </script>
+
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="logo">IT<span>Center</span></a>
+
+            <div class="nav-links">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="#">Shop</a>
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'order_history' %}">Order History</a>
+                {% endif %}
+            </div>
+
+            <div class="nav-icons">
+                {% if request.user.is_authenticated %}
+                <span class="user-greeting">Hi, {{request.user.username}}</span>
+                <a href="{% url 'logout' %}" class="btn-sm"
+                    style="border: 1px solid var(--secondary); color: var(--secondary);">Logout</a>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn-sm">Login</a>
+                {% endif %}
+
+                <a href="{% url 'cart' %}" class="cart-btn">
+                    <div class="cart-icon-wrapper">
+                        <i class='bx bx-shopping-bag'></i>
+                        <span class="cart-count">{{cartItems}}</span>
+                    </div>
+                    <span class="cart-text">My Cart</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock content %}
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Smart Store. All rights reserved.</p>
+    </footer>
+
+    <script src="{% static 'js/cart.js' %}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

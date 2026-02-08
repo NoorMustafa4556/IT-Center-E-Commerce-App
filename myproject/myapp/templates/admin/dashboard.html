@@ -1,0 +1,74 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block content %}
+<div
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <a href="{% url 'admin_orders' %}" style="text-decoration: none; color: inherit;">
+        <div class="stat-card">
+            <div>
+                <h3>{{ total_orders }}</h3>
+                <p>Total Orders</p>
+            </div>
+            <i class='bx bxs-shopping-bag stat-icon'></i>
+        </div>
+    </a>
+    <a href="{% url 'admin_products' %}" style="text-decoration: none; color: inherit;">
+        <div class="stat-card">
+            <div>
+                <h3>{{ total_products }}</h3>
+                <p>Total Products</p>
+            </div>
+            <i class='bx bxs-package stat-icon'></i>
+        </div>
+    </a>
+    <a href="{% url 'admin_customers' %}" style="text-decoration: none; color: inherit;">
+        <div class="stat-card">
+            <div>
+                <h3>{{ total_customers }}</h3>
+                <p>Customers</p>
+            </div>
+            <i class='bx bxs-user-detail stat-icon'></i>
+        </div>
+    </a>
+    <a href="{% url 'admin_categories' %}" style="text-decoration: none; color: inherit;">
+        <div class="stat-card" style="background: linear-gradient(135deg, #FF9800, #F57C00);">
+            <div>
+                <h3>Manage</h3>
+                <p>Categories</p>
+            </div>
+            <i class='bx bxs-category stat-icon'></i>
+        </div>
+    </a>
+
+</div>
+
+<div class="box-element">
+    <h3>Recent Orders</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in recent_orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.customer.name }}</td>
+                <td>{{ order.date_ordered|date:"M d, Y" }}</td>
+                <td><span class="badge badge-warning">{{ order.status }}</span></td>
+                <td>Rs. {{ order.get_cart_total|floatformat:0 }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No recent orders found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

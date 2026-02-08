@@ -1,0 +1,73 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="form-wrapper">
+    <h2 style="text-align: center; margin-bottom: 2rem;">Join <span style="color: var(--primary);">IT Center</span></h2>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-field">
+                <label class="form-label">First Name</label>
+                <input type="text" name="first_name" class="form-control" required>
+            </div>
+            <div class="form-field">
+                <label class="form-label">Last Name</label>
+                <input type="text" name="last_name" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label class="form-label">Username</label>
+            <input type="text" name="username" class="form-control" required>
+        </div>
+
+        <div class="form-field">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" required>
+        </div>
+
+        <div class="form-field">
+            <label class="form-label">Password</label>
+            <div class="password-wrapper">
+                <input type="password" name="password" id="id_password" class="form-control" required>
+                <i class='bx bx-show password-toggle-icon' onclick="togglePassword('id_password', this)"></i>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label class="form-label">Confirm Password</label>
+            <div class="password-wrapper">
+                <input type="password" name="password2" id="id_password2" class="form-control" required>
+                <i class='bx bx-show password-toggle-icon' onclick="togglePassword('id_password2', this)"></i>
+            </div>
+        </div>
+
+        <script>
+            function togglePassword(inputId, icon) {
+                const input = document.getElementById(inputId);
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.classList.remove("bx-show");
+                    icon.classList.add("bx-hide");
+                    icon.style.color = "var(--primary)";
+                } else {
+                    input.type = "password";
+                    icon.classList.remove("bx-hide");
+                    icon.classList.add("bx-show");
+                    icon.style.color = "var(--text-muted)";
+                }
+            }
+        </script>
+
+        <button type="submit" class="btn-primary" style="margin-top: 1rem;">Sign Up</button>
+    </form>
+
+    <div style="margin-top: 1.5rem; text-align: center; color: var(--text-muted);">
+        Already have an account? <a href="{% url 'login' %}">Login</a>
+    </div>
+</div>
+
+{% endblock content %}

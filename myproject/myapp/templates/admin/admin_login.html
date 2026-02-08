@@ -1,0 +1,46 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div style="display:flex; justify-content:center; align-items:center; min-height:80vh;">
+    <div class="card"
+        style="padding:2rem; width:100%; max-width:400px; background:var(--surface-color); border: 1px solid var(--primary-color); box-shadow: 0 0 20px rgba(187, 134, 252, 0.2);">
+        <h2 style="text-align:center; margin-bottom:0.5rem;">Admin Login</h2>
+        <p style="text-align:center; color:var(--text-secondary); margin-bottom:2rem;">Secure Access Area</p>
+
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="form-field">
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" required>
+            </div>
+
+            <div class="form-field">
+                <label>Password</label>
+                <div class="password-wrapper">
+                    <input type="password" name="password" id="admin_password" class="form-control" required>
+                    <i class='bx bx-show password-toggle-icon' onclick="togglePassword('admin_password', this)"></i>
+                </div>
+            </div>
+
+            <script>
+                function togglePassword(inputId, icon) {
+                    const input = document.getElementById(inputId);
+                    if (input.type === "password") {
+                        input.type = "text";
+                        icon.classList.remove("bx-show");
+                        icon.classList.add("bx-hide");
+                        icon.style.color = "var(--primary)";
+                    } else {
+                        input.type = "password";
+                        icon.classList.remove("bx-hide");
+                        icon.classList.add("bx-show");
+                        icon.style.color = "var(--text-muted)";
+                    }
+                }
+            </script>
+
+            <button type="submit" class="btn-primary" style="margin-top:1rem;">Access Dashboard</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}

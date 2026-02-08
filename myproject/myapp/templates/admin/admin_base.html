@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Smart Store</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+    <style>
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: rgba(15, 12, 41, 0.9);
+            border-right: 1px solid var(--glass-border);
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .sidebar-brand span {
+            color: var(--accent-color);
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: var(--glass-bg);
+            color: var(--primary-color);
+            border: 1px solid var(--glass-border);
+        }
+
+        .sidebar-menu i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .stat-card {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin: 0;
+        }
+
+        .stat-card p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            opacity: 0.5;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        th {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .badge-success {
+            background: rgba(3, 218, 198, 0.2);
+            color: #03dac6;
+        }
+
+        .badge-warning {
+            background: rgba(255, 238, 88, 0.2);
+            color: #ffee58;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-brand">Smart<span>Admin</span></div>
+            <div class="sidebar-menu">
+                <a href="{% url 'admin_dashboard' %}"
+                    class="{% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+                    <i class='bx bxs-dashboard'></i> Dashboard
+                </a>
+                <a href="{% url 'admin_products' %}" class="{% if 'products' in request.path %}active{% endif %}">
+                    <i class='bx bxs-shopping-bag'></i> Products
+                </a>
+                <a href="{% url 'admin_orders' %}" class="{% if 'orders' in request.path %}active{% endif %}">
+                    <i class='bx bxs-cart-alt'></i> Orders
+                </a>
+                <a href="{% url 'admin_categories' %}" class="{% if 'categories' in request.path %}active{% endif %}">
+                    <i class='bx bxs-category'></i> Categories
+                </a>
+                <a href="{% url 'home' %}" target="_blank">
+                    <i class='bx bx-link-external'></i> View Site
+                </a>
+                <a href="{% url 'logout' %}" style="margin-top: auto;">
+                    <i class='bx bx-log-out'></i> Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h2>{{ title|default:"Dashboard" }}</h2>
+                <div class="user-info">
+                    <span>{{ request.user.username }}</span>
+                </div>
+            </div>
+
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,67 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block content %}
+<div class="box-element">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h3>Order Management</h3>
+        <a href="{% url 'admin_dashboard' %}" class="btn-outline" style="text-decoration:none;">&larr; Back to
+            Dashboard</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.customer.name }} <small
+                        style="display:block; color:var(--text-secondary);">{{order.customer.email}}</small></td>
+                <td>{{ order.date_ordered|date:"M d, Y" }}</td>
+                <td>{{ order.get_cart_items }}</td>
+                <td>Rs. {{ order.get_cart_total|floatformat:0 }}</td>
+                <td>
+                    <span
+                        class="badge {% if order.status == 'Pending' %}badge-warning{% elif order.status == 'Approved' %}badge-success{% elif order.status == 'Rejected' %}badge-danger{% else %}badge-info{% endif %}">
+                        {{ order.status }}
+                    </span>
+                </td>
+                <td>
+                    <form method="POST" action="{% url 'update_order_status' order.id %}"
+                        style="display: flex; gap: 5px;">
+                        {% csrf_token %}
+                        <select name="status" class="form-control"
+                            style="padding: 0.2rem; margin: 0; font-size: 0.8rem; width: auto;">
+                            <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                            <option value="Approved" {% if order.status == 'Approved' %}selected{% endif %}>Approved
+                            </option>
+                            <option value="Processing" {% if order.status == 'Processing' %}selected{% endif %}>Processing
+                            </option>
+                            <option value="Shipped" {% if order.status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                            <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered
+                            </option>
+                            <option value="Rejected" {% if order.status == 'Rejected' %}selected{% endif %}>Rejected
+                            </option>
+                        </select>
+                        <button type="submit" class="btn-primary"
+                            style="padding: 0.2rem 0.5rem; font-size: 0.8rem; width: auto;">Update</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No orders found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

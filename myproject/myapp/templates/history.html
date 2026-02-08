@@ -1,0 +1,59 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container" style="margin-top: 2rem;">
+    <h2 class="section-title">Order History</h2>
+    <p style="color: var(--text-muted); margin-bottom: 1rem;">View all your completed, rejected, and delivered orders.
+    </p>
+
+    <div
+        style="background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 8px; overflow: hidden;">
+        {% if orders %}
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: rgba(255, 255, 255, 0.05); text-align: left;">
+                    <th style="padding: 1rem; color: var(--secondary);">Order ID</th>
+                    <th style="padding: 1rem; color: var(--secondary);">Date</th>
+                    <th style="padding: 1rem; color: var(--secondary);">Total</th>
+                    <th style="padding: 1rem; color: var(--secondary);">Status</th>
+                    <th style="padding: 1rem; color: var(--secondary);">Items</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr style="border-bottom: 1px solid var(--glass-border);">
+                    <td style="padding: 1rem;">#{{order.transaction_id|floatformat:0}}</td>
+                    <td style="padding: 1rem;">{{order.date_ordered|date:"M d, Y"}}</td>
+                    <td style="padding: 1rem;">Rs. {{order.get_cart_total|floatformat:0}}</td>
+                    <td style="padding: 1rem;">
+                        <span style="
+                            padding: 4px 10px; border-radius: 20px; font-size: 0.85rem;
+                            background: {% if order.status == 'Pending' %}rgba(255, 193, 7, 0.1)
+                                        {% elif order.status == 'Completed' %}rgba(100, 255, 218, 0.1)
+                                        {% elif order.status == 'Rejected' %}rgba(255, 99, 132, 0.1)
+                                        {% else %}rgba(255, 255, 255, 0.1){% endif %};
+                            color: {% if order.status == 'Pending' %}#ffc107
+                                   {% elif order.status == 'Completed' %}var(--primary)
+                                   {% elif order.status == 'Rejected' %}#ff6384
+                                   {% else %}var(--text-main){% endif %};
+                        ">
+                            {{order.status}}
+                        </span>
+                    </td>
+                    <td style="padding: 1rem;">{{order.get_cart_items}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="padding: 3rem; text-align: center;">
+            <h3>No orders found.</h3>
+            <a href="{% url 'home' %}" class="btn-checkout"
+                style="text-decoration: none; margin-top: 1rem; display: inline-block;">Start Shopping</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}

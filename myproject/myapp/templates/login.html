@@ -1,0 +1,52 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="form-wrapper">
+    <h2 style="text-align: center; margin-bottom: 2rem;">Login to <span style="color: var(--primary);">IT Center</span>
+    </h2>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+
+        <div class="form-field">
+            <label class="form-label">Username or Email</label>
+            <input type="text" name="username_or_email" class="form-control" placeholder="Enter your username or email"
+                required>
+        </div>
+
+        <div class="form-field">
+            <label class="form-label">Password</label>
+            <div class="password-wrapper">
+                <input type="password" name="password" id="id_password" class="form-control"
+                    placeholder="Enter your password" required>
+                <i class='bx bx-show password-toggle-icon' onclick="togglePassword('id_password', this)"></i>
+            </div>
+        </div>
+
+        <script>
+            function togglePassword(inputId, icon) {
+                const input = document.getElementById(inputId);
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.classList.remove("bx-show");
+                    icon.classList.add("bx-hide");
+                    icon.style.color = "var(--primary)";
+                } else {
+                    input.type = "password";
+                    icon.classList.remove("bx-hide");
+                    icon.classList.add("bx-show");
+                    icon.style.color = "var(--text-muted)";
+                }
+            }
+        </script>
+
+        <button type="submit" class="btn-primary" style="margin-top: 1rem;">Login</button>
+    </form>
+
+    <div style="margin-top: 1.5rem; text-align: center; color: var(--text-muted);">
+        Don't have an account? <a href="{% url 'signup' %}">Sign Up</a>
+    </div>
+</div>
+
+{% endblock content %}

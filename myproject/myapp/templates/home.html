@@ -1,0 +1,111 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<div class="hero-wrapper">
+    <h1 class="section-title" style="font-size: 3.5rem; margin-bottom: 1rem;">Welcome to <span
+            style="color: var(--primary);">IT Center</span></h1>
+    <p style="color: var(--text-muted); font-size: 1.2rem; max-width: 600px; margin: 0 auto 2rem;">
+        Your ultimate destination for premium Laptops, Mobiles, and Tech Accessories.
+        Performance meets Elegance.
+    </p>
+
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        {% for category in categories %}
+        <a href="{% url 'category_products' category.slug %}" class="btn-sm"
+            style="font-size: 1.1rem; padding: 0.8rem 2rem; border-color: var(--secondary); color: var(--secondary);">
+            {{ category.name }}
+        </a>
+        {% endfor %}
+        <a href="{% url 'home' %}" class="btn-sm" style="font-size: 1.1rem; padding: 0.8rem 2rem;">All Products</a>
+    </div>
+</div>
+
+<!-- Search -->
+<div class="container" style="margin-bottom: 3rem;">
+    <form method="GET" action="{% url 'home' %}" style="display: flex; gap: 1rem; max-width: 600px; margin: 0 auto;">
+        <input type="text" name="search" class="form-control" placeholder="Search laptops, mobiles..."
+            value="{{ search_query }}">
+        <button type="submit" class="btn-sm"
+            style="background: var(--primary); color: #000; border: none; font-weight: bold;">Search</button>
+    </form>
+</div>
+
+<!-- User Pending Orders (if any) -->
+{% if request.user.is_authenticated and pending_orders %}
+<div class="container" style="margin-bottom: 3rem;">
+    <div class="alert alert-success" style="background: rgba(189, 52, 254, 0.1); border-color: var(--secondary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="color: var(--secondary); margin: 0;">Pending Orders</h3>
+            <a href="{% url 'order_history' %}" class="btn-sm"
+                style="border: 1px solid var(--secondary); color: var(--secondary); text-decoration: none;">View
+                History</a>
+        </div>
+        {% for order in pending_orders %}
+        <div
+            style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--glass-border);">
+            <span>Order #{{ order.id }}</span>
+            <span>{{ order.date_ordered|date:"M d, Y" }}</span>
+            <span>Rs. {{ order.get_cart_total|floatformat:0 }}</span>
+            <span style="color: var(--secondary);">{{ order.status }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Product Grid -->
+<div class="container">
+    <div class="product-grid">
+        {% for product in products %}
+        <div class="product-card">
+            <a href="{% url 'product_detail' product.id %}">
+                {% if product.image %}
+                <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                <img class="product-image" src="https://via.placeholder.com/300x300.png?text=No+Image"
+                    alt="{{ product.name }}">
+                {% endif %}
+            </a>
+
+            <div class="product-info">
+                {% if product.category %}
+                <span class="product-category">{{ product.category.name }}</span>
+                {% endif %}
+                <h3 class="product-title">{{ product.name }}</h3>
+                <span class="product-price">Rs. {{ product.price|floatformat:0 }}</span>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button data-product="{{product.id}}" data-action="add" class="update-cart btn-primary">
+                        Add to Cart
+                    </button>
+                    <a href="{% url 'product_detail' product.id %}" class="btn-sm"
+                        style="text-align: center; display: flex; align-items: center; justify-content: center;">
+                        View
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div style="grid-column: 1/-1; text-align: center; padding: 4rem;">
+            <h3>No products found matching your criteria.</h3>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- About Section -->
+<div class="container" style="margin-bottom: 4rem; padding-top: 2rem; border-top: 1px solid var(--glass-border);">
+    <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+        <h2 style="color: var(--primary);">About IT Center</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">
+            Established to bring the best of technology to your doorstep. IT Center specializes in high-performance
+            laptops and latest mobile devices.
+            We ensure quality, warranty, and premium customer service for all your tech needs.
+        </p>
+    </div>
+</div>
+
+{% endblock content %}

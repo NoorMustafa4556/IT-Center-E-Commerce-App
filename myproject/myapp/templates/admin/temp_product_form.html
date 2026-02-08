@@ -1,0 +1,31 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div class="box-element">
+        <h3 style="margin-bottom: 1.5rem;">{{ title }}</h3>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">{{ field.label
+                    }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <ul style="color: #cf6679; margin-top: 0.5rem; list-style: none;">
+                    {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" class="btn-primary" style="flex: 1;">Save Product</button>
+                <a href="{% url 'admin_products' %}" class="btn-outline"
+                    style="flex: 1; text-align: center; text-decoration: none;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

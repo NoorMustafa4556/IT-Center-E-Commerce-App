@@ -1,0 +1,24 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 2rem auto; text-align: center;">
+    <div class="box-element" style="border-color: #cf6679; position: relative;">
+        <a href="{% url 'admin_products' %}"
+            style="position: absolute; top: 1rem; left: 1rem; text-decoration: none; color: var(--text-secondary);">&larr;
+            Back</a>
+        <h2 style="color: #cf6679; margin-bottom: 1rem;">Delete Product?</h2>
+        <p style="margin-bottom: 2rem;">Are you sure you want to delete <strong>"{{ item.name }}"</strong>? This action
+            cannot be undone.</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn-primary" style="background: #cf6679; border: none;">Yes,
+                    Delete</button>
+                <a href="{% url 'admin_products' %}" class="btn-outline"
+                    style="text-decoration: none; text-align: center;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

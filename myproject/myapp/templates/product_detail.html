@@ -1,0 +1,48 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container product-detail-container">
+    <!-- Image Side -->
+    <div>
+        {% if product.image %}
+        <img class="detail-image" src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+        <img class="detail-image" src="https://via.placeholder.com/600x600.png?text=No+Image" alt="{{ product.name }}">
+        {% endif %}
+    </div>
+
+    <!-- Info Side -->
+    <div class="detail-info">
+        {% if product.category %}
+        <span class="product-category" style="font-size: 1rem;">{{ product.category.name }}</span>
+        {% endif %}
+
+        <h1>{{ product.name }}</h1>
+        <p class="detail-price">Rs. {{ product.price|floatformat:0 }}</p>
+
+        <div class="detail-desc">
+            <p>{{ product.description|default:"No description available for this premium product." }}</p>
+        </div>
+
+        <div class="action-buttons">
+            <button data-product="{{product.id}}" data-action="add" class="btn-primary btn-add-cart update-cart">
+                ADD TO CART
+            </button>
+            <a href="{% url 'home' %}" class="btn-sm btn-back"
+                style="display: flex; align-items: center; justify-content: center;">
+                CONTINUE SHOPPING
+            </a>
+        </div>
+
+        <div style="margin-top: 2rem; padding: 1rem; border: 1px solid var(--glass-border); border-radius: 8px;">
+            <p style="color: var(--text-muted); font-size: 0.9rem;">
+                <i class='bx bx-check-shield' style="color: var(--primary);"></i> Official Warranty Included<br>
+                <i class='bx bx-truck' style="color: var(--primary);"></i> Free Shipping on orders over Rs. 50,000
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

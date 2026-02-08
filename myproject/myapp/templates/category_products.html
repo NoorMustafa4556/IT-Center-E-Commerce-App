@@ -1,0 +1,39 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+
+<div style="margin-top: 2rem; margin-bottom: 2rem;">
+    <h2 style="margin-bottom: 1rem;">Category: <span style="color: var(--primary-color);">{{category.name}}</span></h2>
+    <a href="{% url 'home' %}" class="btn-outline" style="text-decoration:none;">Back to All Products</a>
+</div>
+
+<!-- Product Grid -->
+<div class="product-grid">
+    {% for product in products %}
+    <div class="card">
+        {% if product.image %}
+        <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+        <img class="card-img-top" src="https://via.placeholder.com/300x300.png?text=No+Image" alt="{{ product.name }}">
+        {% endif %}
+
+        <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="price">${{ product.price|floatformat:2 }}</p>
+            <div style="display: flex; gap: 0.5rem;">
+                <a href="{% url 'product_detail' product.id %}" class="btn-outline"
+                    style="text-align:center; text-decoration:none;">View</a>
+                <button data-product="{{product.id}}" data-action="add" class="btn-primary update-cart">Add to
+                    Cart</button>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary);">
+        <h3>No products found in this category.</h3>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}
