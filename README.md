@@ -46,6 +46,13 @@ Built with **Django**, the system features a custom admin dashboard, secure user
 
 <p align="center">
   <img src="myproject/ProjectImages/1.png" width="90%" style="margin: 10px; border-radius: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
+  <img src="myproject/ProjectImages/2.png" width="90%" style="margin: 10px; border-radius: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
+  <img src="myproject/ProjectImages/3.png" width="90%" style="margin: 10px; border-radius: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
+  <img src="myproject/ProjectImages/4.png" width="90%" style="margin: 10px; border-radius: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
+  <img src="myproject/ProjectImages/5.png" width="90%" style="margin: 10px; border-radius: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
+  <img src="myproject/ProjectImages/6.png" width="90%" style="margin: 10px; border-radius: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
+  <img src="myproject/ProjectImages/7.png" width="90%" style="margin: 10px; border-radius: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
+  <img src="myproject/ProjectImages/8.png" width="90%" style="margin: 10px; border-radius: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
   <!-- Add more screenshots as needed -->
 </p>
 
