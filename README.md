@@ -4,6 +4,7 @@
 
 Built with **Django**, the system features a custom admin dashboard, secure user authentication, and a responsive design, tailored for managing an online tech store efficiently.
 
+
 ---
 
 
