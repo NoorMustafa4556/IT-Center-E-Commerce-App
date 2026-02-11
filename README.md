@@ -6,6 +6,7 @@ Built with **Django**, the system features a custom admin dashboard, secure user
 
 ---
 
+
 ## 🚀 Key Features
 
 - **Dynamic Storefront** – Showcase products with high-quality images and descriptions.
